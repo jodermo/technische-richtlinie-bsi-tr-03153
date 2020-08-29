@@ -1,6 +1,6 @@
 # POS-System
 
-## Technische Richtlinie BSI TR-03153 2020
+## TÜV: Technische Richtlinie BSI TR-03153 2020
 ### Technische Sicherheitseinrichtung für elektronische Aufzeichnungssysteme
 
 #### Aufzeichnungspflicht
