@@ -22,8 +22,12 @@ Die Mitteilung nach Satz 1 ist innerhalb eines Monats nach Anschaffung oder Auß
 § 146a (3), Satz 1: „Das Bundesministerium der Finanzen wird ermächtigt, durch Rechtsverordnung mit Zustimmung des Bundestages und des Bundesrates und im Einvernehmen mit dem Bundesministerium des Innern und dem Bundesministerium für Wirtschaft und Energie Folgendes zu bestimmen:
   - 1.die elektronischen Aufzeichnungssysteme, die über eine zertifizierte technische Sicherheitseinrichtung verfügen müssen, und
   - 2.die Anforderungen an
-    - a) das Sicherheitsmodul, b) das Speichermedium, c) die einheitliche digitale Schnittstelle,
-    - d) die elektronische Aufbewahrung der Aufzeichnungen, e) die Protokollierung von digitalen Grundaufzeichnungen zur Sicherstellung der Integrität und Authentizität sowie der Vollständigkeit der elektronischen Aufzeichnung, f) den Beleg und g) die Zertifizierung der technischen Sicherheitseinrichtung."
+    - a) das Sicherheitsmodul, 
+    - b) das Speichermedium, 
+    - c) die einheitliche digitale Schnittstelle,
+    - d) die elektronische Aufbewahrung der Aufzeichnungen,
+    - e) die Protokollierung von digitalen Grundaufzeichnungen zur Sicherstellung der Integrität und Authentizität sowie der Vollständigkeit der elektronischen Aufzeichnung,
+    - f) den Beleg und g) die Zertifizierung der technischen Sicherheitseinrichtung."
     
 ### Aufgaben des BSI
 § 146a (3) Sätze 2-3: „Die Erfüllung der Anforderungen nach Satz 1 Nummer 2 Buchstabe a bis c ist durch eine Zertifizierung des Bundesamts für Sicherheit in der Informationstechnik nachzuweisen, die fortlaufend aufrechtzuerhalten ist. Das Bundesamt für Sicherheit in der Informationstechnik kann mit der Festlegung von Anforderungen an die technische Sicherheitseinrichtung im Sinne des Satzes 1 Nummer 2 Buchstabe a bis c beauftragt werden. [...]“
