@@ -12,7 +12,7 @@ Quelle: [www.tuvit.de/de/tuevit/elektronische-kassensysteme](https://www.tuvit.d
 
 Im Zuge der Fiskalisierung müssen elektronische oder computergestützte Kassensysteme sowie Registrierkassen ab Januar 2020 über eine zertifizierte technische Sicherheitseinrichtung (TSE) verfügen. Die zu erfüllenden Anforderungen sind in der TR-03153 "Technische Sicherheitseinrichtung für elektronische Aufzeichnungssysteme" festgehalten. 
 
-Gleichzeitig muss das Sicherheitsmodul der TSE wiederum nach den Common Criteria (CC) evaluiert und zertifiziert sein. Im Rahmen der geforderten CC-Zertifizierungen ist eine Konformität zu den Schutzprofilen [BSI PP-CSP]](TR-03153.pdf) und [BSI PP-SMAERS](https://www.tuvit.de/de/leistungen/hardware-software-evaluierung/common-criteria/) nachzuweisen.
+Gleichzeitig muss das Sicherheitsmodul der TSE wiederum nach den Common Criteria (CC) evaluiert und zertifiziert sein. Im Rahmen der geforderten CC-Zertifizierungen ist eine Konformität zu den Schutzprofilen [BSI PP-CSP](TR-03153.pdf) und [BSI PP-SMAERS](https://www.tuvit.de/de/leistungen/hardware-software-evaluierung/common-criteria/) nachzuweisen.
 
 Ziel ist es, die Systeme vor unerlaubten Eingriffen und Manipulationen zu schützen und auf diese Weise die Integrität, Authentizität und Vollständigkeit der entsprechenden Daten zu gewährleisten.
 
