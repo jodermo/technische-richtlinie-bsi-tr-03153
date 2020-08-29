@@ -6,9 +6,12 @@ Author: Moritz Petzka, [petzka.com](https://petzka.com)
 
 ### KassenSichV: Zertifizierungspflicht ab 2020
 
+Technische Richtlinie BSI: [TR-03153.pdf](TR-03153.pdf)
+Quelle: [www.tuvit.de/de/tuevit/elektronische-kassensysteme](https://www.tuvit.de/de/tuevit/elektronische-kassensysteme/)
+
 Im Zuge der Fiskalisierung müssen elektronische oder computergestützte Kassensysteme sowie Registrierkassen ab Januar 2020 über eine zertifizierte technische Sicherheitseinrichtung (TSE) verfügen. Die zu erfüllenden Anforderungen sind in der TR-03153 "Technische Sicherheitseinrichtung für elektronische Aufzeichnungssysteme" festgehalten. 
 
-Gleichzeitig muss das Sicherheitsmodul der TSE wiederum nach den Common Criteria (CC) evaluiert und zertifiziert sein. Im Rahmen der geforderten CC-Zertifizierungen ist eine Konformität zu den Schutzprofilen [BSI PP-CSP] und [BSI PP-SMAERS] nachzuweisen.
+Gleichzeitig muss das Sicherheitsmodul der TSE wiederum nach den Common Criteria (CC) evaluiert und zertifiziert sein. Im Rahmen der geforderten CC-Zertifizierungen ist eine Konformität zu den Schutzprofilen [BSI PP-CSP]](TR-03153.pdf) und [BSI PP-SMAERS](https://www.tuvit.de/de/leistungen/hardware-software-evaluierung/common-criteria/) nachzuweisen.
 
 Ziel ist es, die Systeme vor unerlaubten Eingriffen und Manipulationen zu schützen und auf diese Weise die Integrität, Authentizität und Vollständigkeit der entsprechenden Daten zu gewährleisten.
 
@@ -17,9 +20,7 @@ Ziel ist es, die Systeme vor unerlaubten Eingriffen und Manipulationen zu schüt
 
 ### Technische Sicherheitseinrichtung für elektronische Aufzeichnungssysteme
 
-Quelle: [TR-03153.pdf](TR-03153.pdf)
 
-Website: [www.tuvit.de/de/tuevit/elektronische-kassensysteme](https://www.tuvit.de/de/tuevit/elektronische-kassensysteme/)
 
 #### Aufzeichnungspflicht
 § 146a (1) Satz 1: „Wer aufzeichnungspflichtige Geschäftsvorfälle oder andere Vorgänge mit Hilfe eines elektronischen Aufzeichnungssystems erfasst, hat ein elektronisches Aufzeichnungssystem zu verwenden, das jeden aufzeichnungspflichtigen Geschäftsvorfall und anderen Vorgang einzeln, vollständig, richtig, zeitgerecht und geordnet aufzeichnet.“
