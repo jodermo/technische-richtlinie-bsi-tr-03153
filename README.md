@@ -2,7 +2,18 @@
 ## Voraussetzungen für Kassensysteme in deutschland
 Author: Moritz Petzka, [petzka.com](https://petzka.com)
 
-## TÜV: Technische Richtlinie [BSI TR-03153](TR-03153.pdf) 2020
+
+
+### KassenSichV: Zertifizierungspflicht ab 2020
+
+Im Zuge der Fiskalisierung müssen elektronische oder computergestützte Kassensysteme sowie Registrierkassen ab Januar 2020 über eine zertifizierte technische Sicherheitseinrichtung (TSE) verfügen. Die zu erfüllenden Anforderungen sind in der TR-03153 "Technische Sicherheitseinrichtung für elektronische Aufzeichnungssysteme" festgehalten. 
+
+Gleichzeitig muss das Sicherheitsmodul der TSE wiederum nach den Common Criteria (CC) evaluiert und zertifiziert sein. Im Rahmen der geforderten CC-Zertifizierungen ist eine Konformität zu den Schutzprofilen [BSI PP-CSP] und [BSI PP-SMAERS] nachzuweisen.
+
+Ziel ist es, die Systeme vor unerlaubten Eingriffen und Manipulationen zu schützen und auf diese Weise die Integrität, Authentizität und Vollständigkeit der entsprechenden Daten zu gewährleisten.
+
+
+## TÜV: Technische Richtlinie [BSI TR-03153](TR-03153.pdf)
 
 ### Technische Sicherheitseinrichtung für elektronische Aufzeichnungssysteme
 
