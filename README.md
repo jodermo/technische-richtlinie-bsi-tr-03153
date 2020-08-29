@@ -6,6 +6,10 @@ Author: Moritz Petzka, [petzka.com](https://petzka.com)
 
 Technische Richtlinie BSI: [TR-03153.pdf](TR-03153.pdf)
 
+Technical Guideline BSI TR-03151: [TR-03151.pdf](TR-03153.pdf)
+Amendment to BSI TR-03151: [TR-03151-amendment.pdf](TR-03153.pdf)
+TR-03151 API-Vorlagen: [TR-03151-api-vorlagen.zip](TR-03153.pdf)
+
 Quelle: [www.tuvit.de/de/tuevit/elektronische-kassensysteme](https://www.tuvit.de/de/tuevit/elektronische-kassensysteme/)
 
 ### KassenSichV: Zertifizierungspflicht ab 2020
