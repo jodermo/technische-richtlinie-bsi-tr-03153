@@ -1,0 +1,1083 @@
+//The module SEAPI defines the native type, the constant and the different exceptions 
+//of the Secure Element API (SE API). Furthermore, it contains the definition of the interface SEAPI that specifies the different functions of the SE API 
+//version 1.0.1
+
+
+
+module SEAPI {
+    
+    // Native type for the representation of a point in time
+    native DateTime;
+	
+    // Constant that defines the return value for all SE API functions that indicates 
+    // the successful execution of the functions 
+    const short EXECUTION_OK=0;
+	
+    // Constant that defines a return value for the SE API function authenticateUser. 
+    // This return value indicates that the authentication attempt has failed  
+    const short AUTHENTICATION_FAILED= -4000;
+	
+    // Constant that defines a return value for the SE API function unblockUser. 
+    // This return value indicates that the attempt to unblock a PIN entry has failed. 
+    const short UNBLOCK_FAILED= -4001;
+	
+    //Represents the variants that are supported by the Secure Element to update transactions.
+    enum UpdateVariants{
+          signedUpdate,
+          unsignedUpdate,
+          signedAndUnsignedUpdate
+    };
+	
+	
+    //Represents the variants that are supported by the Secure Element to update the current date/time.
+    enum SyncVariants{
+          noInput,
+          utcTime,
+          generalizedTime,
+		  unixTime
+    };
+	
+	
+    // Represents the result of an authentication attempt.
+    // The value ok SHALL indicate that the authentication has been successful.
+    // The value failed SHALL indicate that the authentication has failed.
+    // The value pinIsBlocked SHALL indicate that the PIN entry for the userId was blocked before the authentication attempt.
+    // The value unknownUserId SHALL indicate that the passed userId is not managed by the SE API.
+    enum AuthenticationResult{
+          ok,
+          failed,
+          pinIsBlocked,
+          unknownUserId
+    };
+	
+	
+    // Represents the result of the unblock process.
+    // The value ok SHALL indicate that the unblocking has been successful.
+    // The value failed SHALL indicate that the unblocking has failed.
+    // The value unknownUserId SHALL indicate that the passed userId is not managed by the SE API.
+    // The value error SHALL indicate that an error has occurred during the execution of the function unblockUser.
+    enum UnblockResult{
+          ok,
+          failed,
+          unknownUserId,
+          error
+    };
+	
+    // The exception ErrorRetrieveLogMessageFailed is raised if 
+    // the retrieving of the log message parts that have been 
+    // created by Secure Element most recently failed
+    exception ErrorRetrieveLogMessageFailed{};
+	
+    // The exception ErrorStorageFailure is raised if 
+    // storing of the log message in the storage has failed
+    exception ErrorStorageFailure{};
+	
+    // The exception ErrorUpdateTimeFailed is raised if 
+    // the execution of the Secure Element functionality to set the time failed
+    exception ErrorUpdateTimeFailed{};
+	
+    // The exception ErrorParameterMismatch is raised if 
+    // there is a mismatch regarding the particular parameters
+    // that have been provided in the context of the export of stored data
+    exception ErrorParameterMismatch{};
+	
+    // The exception ErrorIdNotFound is raised if 
+    // no data has been found for the provided clientID 
+    // in the context of the export of stored data
+    exception ErrorIdNotFound{};
+	
+    // The exception ErrorTransactionNumberNotFound is raised if 
+    // no data has been found for the provided transaction number(s) 
+    // in the context of the export of stored data
+    exception ErrorTransactionNumberNotFound{};
+	
+    // The exception ErrorNoDataAvailable is raised if 
+    // no data has been found for the provided selection
+    // in the context of the export of stored data 
+    exception ErrorNoDataAvailable{};
+	
+    // The exception ErrorTooManyRecords is raised if 
+    // the amount of requested records exceeds the passed value for the maximum number of records
+    // in the context of the export of stored data
+    exception ErrorTooManyRecords{};
+	
+    // The exception ErrorStartTransactionFailed is raised if 
+    // the execution of the Secure Element functionality to start a transaction failed
+    exception ErrorStartTransactionFailed{};
+	
+    // The exception ErrorUpdateTransactionFailed is raised if 
+    // the execution of the Secure Element functionality to update a transaction failed
+    exception ErrorUpdateTransactionFailed{};
+	
+    // The exception ErrorFinishTransactionFailed is raised if 
+    // the execution of the Secure Element functionality to finish a transaction failed 
+    exception ErrorFinishTransactionFailed{};
+	
+    // The exception ErrorRestoreFailed is raised if 
+    // the restore process in the context of a restoring from a backup in form of exported data failed
+    exception ErrorRestoreFailed{};
+	
+    // The exception ErrorStoringInitDataFailed is raised if 
+    // the storing of the initialization data during the commissioning of the SE API 
+    // by the application operator failed
+    exception ErrorStoringInitDataFailed{};
+	
+    // The exception ErrorExportCertFailed is raised if 
+    // the collection of the certificates for the export failed 
+    exception ErrorExportCertFailed{};
+	
+    // The exception ErrorNoLogMessage is raised if 
+    // no log message parts are found in the Secure Element
+    exception ErrorNoLogMessage{};
+		
+    // The exception ErrorReadingLogMessage is raised if 
+    // the retrieving of the log message parts that have been 
+    // created from Secure Element most recently failed
+    exception ErrorReadingLogMessage{};
+	
+    // The exception ErrorNoTransaction is raised if 
+    // no transaction is known to be open under the provided transaction number
+    exception ErrorNoTransaction{};
+		
+    //The exception ErrorSeApiNotInitialized is raised if
+    //a SE API function is invoked although the SE API has not been initialized
+    exception ErrorSeApiNotInitialized{};
+	
+    // The exception ErrorTimeNotSet is raised if
+    // an appropriate SE API function is invoked although the date/time managed by the Secure Element has not 
+    // been updated after 
+    // (i) the initialization of the SE API or
+    // (ii) a period of absence of current for the Secure Element. 
+    exception ErrorTimeNotSet{};
+	
+    // The exception ErrorCertificateExpired is raised if a SE API function is invoked and 
+    // the certificate with the public key for the verification of the appropriate type of log messages is expired. 
+    // Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. 
+    // In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.
+    exception ErrorCertificateExpired{}; 
+	
+    // The exception ErrorSecureElementDisabled is raised if SE API functions are invoked although the Secure Element has been disabled
+    exception ErrorSecureElementDisabled{};
+	
+    // The exception ErrorUserNotAuthorized is raised if the user who has invoked a restricted SE API function is not authorized to execute this function
+    exception ErrorUserNotAuthorized{};
+	
+    // The exception ErrorUserNotAuthenticated is raised if the user who has invoked a restricted SE API function has not the status "authenticated"
+    exception ErrorUserNotAuthenticated{};
+		
+    // The exception ErrorDescriptionNotSetByManufacturer is raised if the function initialize has been invoked without a value
+    // for the input parameter description although the description of the SE API has not been set by the manufacturer
+    exception ErrorDescriptionNotSetByManufacturer{};
+	
+    // The exception ErrorDescriptionSetByManufacturer is raised if the function initialize has been invoked with a value for
+    // the input parameter description although the description of the SE API has been set by the manufacturer.
+    exception ErrorDescriptionSetByManufacturer{};
+	
+    // The exception ErrorExportSerialNumbersFailed is raised if the collection of the serial number(s) failed
+    exception ErrorExportSerialNumbersFailed {};
+	
+    // The exception ErrorGetMaxNumberOfClientsFailed is raised if the determination of the maximum number of clients that could use the SE API simultaneously failed
+    exception ErrorGetMaxNumberOfClientsFailed {}; 
+	
+    // The exception ErrorGetCurrentNumberOfClientsFailed is raised if the determination of the current number of clients using the SE API failed
+    exception ErrorGetCurrentNumberOfClientsFailed {};
+	
+    // The exception ErrorGetMaxNumberTransactionsFailed is raised if the determination of the maximum number of
+    // transactions that can be managed simultaneously failed
+    exception ErrorGetMaxNumberTransactionsFailed {};
+	
+    // The exception ErrorGetCurrentNumberOfTransactionsFailed is raised if the determination of the number of currently opened transactions failed
+    exception ErrorGetCurrentNumberOfTransactionsFailed {};
+	
+    // The exception ErrorGetSupportedUpdateVariantsFailed is raised if the identification of the supported variant(s) to update transactions failed.
+    exception ErrorGetSupportedUpdateVariantsFailed {};
+	
+    // The exception ErrorDeleteStoredDataFailed is raised if the deletion of the data from the storage failed
+    exception ErrorDeleteStoredDataFailed {};
+	
+    // The exception ErrorUnexportedStoredData is raised if deletion of data from the storage failed because the storage contains data that has not been exported
+    exception ErrorUnexportedStoredData {};
+	
+    // The exception ErrorSigningSystemOperationDataFailed is raised if the determination of the log message parts for the system operation data by the Secure Element failed
+    exception ErrorSigningSystemOperationDataFailed{};
+	
+    // The exception ErrorUserIdNotManaged is raised if the passed userId is not managed by the SE API
+    exception ErrorUserIdNotManaged {};
+	
+    // The exception ErrorUserIdNotAuthenticated is raised if the passed userId has not the status authenticated
+    exception ErrorUserIdNotAuthenticated {};
+	
+    // The exception ErrorDisableSecureElementFailed is raised if the deactivation of the Secure Element failed  
+    exception ErrorDisableSecureElementFailed {};
+	
+    // The exception ErrorInvalidTime is raised if the transmitted time parameters are not valid, e.g. year out of bounds  
+    exception ErrorInvalidTime {};
+	
+    // The exception ErrorGetTimeSyncVariantFailed is raised if the identification of the supported variant for updating the current date/time failed
+    exception ErrorGetTimeSyncVariantFailed {};
+	
+	
+    //The interface SEAPI defines the functions that are provided by the Secure Element API (SE API)  
+
+    interface SEAPI{
+			 
+        // The function initialize starts the initialization of the SE API by the operator of the corresponding application.
+        // The initialization data in form of the description of the SE API is passed by the input parameter description.
+        // The description of the SE API MUST NOT have been set by the manufacturer. 
+        // @param description   
+        //             short description of the SE API. 
+        //             The parameter SHALL only be used if the description of the SE API has not been set by the manufacturer [REQUIRED]. 
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorSigningSystemOperationDataFailed
+        //             determination of the log message parts for the system operation data by the Secure Element failed
+        // @raises ErrorStoringInitDataFailed   
+        //             storing of the data for the description of the SE API failed
+        // @raises ErrorRetrieveLogMessageFailed
+        //             execution of the Secure Element functionality to retrieve log message parts has failed
+        // @raises ErrorStorageFailure
+        //             storing of the log message has failed
+        // @raises ErrorCertificateExpired
+        //             the certificate with the public key for the verification of the appropriate type of log messages is expired. 
+        //             Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. 
+        //             In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.
+        // @raises ErrorSecureElementDisabled
+        //             the Secure Element has been disabled
+        // @raises ErrorUserNotAuthorized
+        //             the user who has invoked the function initialize is not authorized to execute this function
+        // @raises ErrorUserNotAuthenticated   
+        //             the user who has invoked the function initialize has not the status authenticated
+        // @raises ErrorDescriptionSetByManufacturer   
+        //             the function initialize has been invoked with a value for the input parameter description 
+        //             although the description of the SE API has been set by the manufacturer
+	  
+        short  initialize(in string description)
+                          raises(ErrorSigningSystemOperationDataFailed,
+                                 ErrorStoringInitDataFailed,
+                                 ErrorRetrieveLogMessageFailed,
+                                 ErrorStorageFailure,
+                                 ErrorCertificateExpired,
+                                 ErrorSecureElementDisabled,
+                                 ErrorUserNotAuthorized,
+                                 ErrorUserNotAuthenticated,
+                                 ErrorDescriptionSetByManufacturer);
+		
+				   				
+        // The function initialize starts the initialization of the SE API by the operator of the corresponding application.
+        // The description of the SE API SHALL have been set by the manufacturer.
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorSigningSystemOperationDataFailed
+        //             determination of the log message parts for the system operation data by the Secure Element failed
+        // @raises ErrorRetrieveLogMessageFailed   
+        //             execution of the Secure Element functionality to retrieve log message parts has failed
+        // @raises ErrorStorageFailure   
+        //             storing of the log message has failed
+        // @raises ErrorCertificateExpired   
+        //             the certificate with the public key for the verification of the appropriate type of log messages is expired. 
+        //             Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. 
+        //             In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.
+        // @raises ErrorSecureElementDisabled   
+        //             the Secure Element has been disabled
+        // @raises ErrorUserNotAuthorized   
+        //             the user who has invoked the function initialize is not authorized to execute this function
+        // @raises ErrorUserNotAuthenticated   
+        //             the user who has invoked the function initialize has not the status authenticated
+        // @raises ErrorDescriptionNotSetByManufacturer   
+        //             the function initialize has been invoked without a value for the input parameter 
+        //             description although the description of the SE API has not been set by the manufacturer 
+		
+        short  initialize() raises(ErrorSigningSystemOperationDataFailed,
+                                   ErrorRetrieveLogMessageFailed,
+                                   ErrorStorageFailure,
+                                   ErrorCertificateExpired,
+                                   ErrorSecureElementDisabled,
+                                   ErrorUserNotAuthorized,
+                                   ErrorUserNotAuthenticated,
+                                   ErrorDescriptionNotSetByManufacturer);
+	    
+ 	   	
+        // The function updateTime updates the current date/time that is maintained by the Secure Element by passing a new date/time value
+        // @param  newDateTime   
+        //             new value for the date/time maintained by the Secure Element [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorUpdateTimeFailed   
+        //             execution of the Secure Element functionality to set the time has failed
+        // @raises ErrorRetrieveLogMessageFailed   
+        //             execution of the Secure Element functionality to retrieve log message parts has failed
+        // @raises ErrorStorageFailure   
+        //             storing of the log message has failed
+        // @raises ErrorSeApiNotInitialized   
+        //             the SE API has not been initialized
+        // @raises ErrorCertificateExpired   
+        //             the certificate with the public key for the verification of the appropriate type of log messages is expired. 
+        //             Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. 
+        //             In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.
+        // @raises ErrorSecureElementDisabled   
+        //             the Secure Element has been disabled
+        // @raises ErrorUserNotAuthorized   
+        //             the user who has invoked the function updateTime is not authorized to execute this function
+        // @raises ErrorUserNotAuthenticated   
+        //             the user who has invoked the function updateTime has not the status authenticated   
+        // @raises ErrorInvalidTime   
+        //             the transmitted time parameters are not valid, e.g. year out of bounds
+	  
+        short updateTime(in DateTime newDateTime)
+                         raises(ErrorUpdateTimeFailed,
+                                ErrorRetrieveLogMessageFailed,
+                                ErrorStorageFailure,
+                                ErrorSeApiNotInitialized,
+                                ErrorCertificateExpired,
+                                ErrorSecureElementDisabled,
+                                ErrorUserNotAuthorized,
+                                ErrorUserNotAuthenticated,
+								ErrorInvalidTime);
+		
+		
+        // The function updateTime updates the current date/time that is maintained by the Secure Element by 
+        // using the functionality for time synchronization of the Secure Element
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorUpdateTimeFailed   
+        //             execution of the Secure Element functionality to update the time has failed
+        // @raises ErrorRetrieveLogMessageFailed   
+        //             execution of the Secure Element functionality to retrieve log message parts has failed
+        // @raises ErrorStorageFailure   
+        //             storing of the log message has failed
+        // @raises ErrorSeApiNotInitialized   
+        //             the SE API has not been initialized
+        // @raises ErrorCertificateExpired   
+        //             the certificate with the public key for the verification of the appropriate type of log messages is expired. 
+        //             Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. 
+        //             In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.
+        // @raises ErrorSecureElementDisabled   
+        ///            the Secure Element has been disabled	
+        // @raises ErrorUserNotAuthorized   
+        //             the user who has invoked the function updateTime is not authorized to execute this function
+        // @raises ErrorUserNotAuthenticated   
+        //             the user who has invoked the function updateTime has not the status authenticated   
+	  				
+        short updateTime() raises(ErrorUpdateTimeFailed,
+                                  ErrorRetrieveLogMessageFailed,
+                                  ErrorStorageFailure,
+                                  ErrorSeApiNotInitialized,
+                                  ErrorCertificateExpired,
+                                  ErrorSecureElementDisabled,
+                                  ErrorUserNotAuthorized,
+                                  ErrorUserNotAuthenticated);
+				   				 
+				   				 
+        // The function disableSecureElement disables the Secure Element in a way that none of its functionality can be used anymore
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorDisableSecureElementFailed   
+        //             the deactivation of the Secure Element failed  
+        // @raises ErrorTimeNotSet  
+        //             the managed data/time in the Secure Element has not been updated after the initialization of the Secure Element
+        //             or a period of absence of current for the Secure Element
+        // @raises ErrorRetrieveLogMessageFailed   
+        //             execution of the Secure Element functionality to retrieve log message parts has failed
+        // @raises ErrorStorageFailure   
+        //             storing of the data of the log message has failed	
+        // @raises ErrorCertificateExpired   
+        //             the certificate with the public key for the verification of the appropriate type of log messages is expired. 
+        //             Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. 
+        //             In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.
+        // @raises ErrorSecureElementDisabled   
+        //             the Secure Element has been disabled   
+        // @raises ErrorUserNotAuthorized   
+        //             the user who has invoked the function disableSecureElement is not authorized to execute this function
+        // @raises ErrorUserNotAuthenticated   
+        //             the user who has invoked the function disableSecureElement has not the status authenticated  
+		   				 
+       short disableSecureElement() raises(ErrorDisableSecureElementFailed,
+                                           ErrorTimeNotSet,
+                                           ErrorRetrieveLogMessageFailed,
+                                           ErrorStorageFailure,
+                                           ErrorCertificateExpired,
+                                           ErrorSecureElementDisabled,
+                                           ErrorUserNotAuthorized ,
+                                           ErrorUserNotAuthenticated);		   				 
+		
+				
+        // Starts a new transaction
+        // @param clientId  
+        //            represents the ID of the application that has invoked the function [REQUIRED]
+        // @param processData   
+        //            represents all the necessary information regarding the initial state of the process [REQUIRED]
+        // @param processType    
+        //            identifies the type of the transaction as defined by the application [OPTIONAL]
+        // @param additionalData   
+        //            reserved for future use [OPTIONAL]
+        // @param transactionNumber 
+        //            represents a transaction number that has been assigned by the Secure Element to the process [REQUIRED]
+        // @param logTime   
+        //            represents the point in time of the Secure Element when the log message was created [REQUIRED]
+        // @param serialNumber   
+        //            represents a hash value over the public key of the key pair that is used for the creation 
+        //            of signature values in transaction log messages [REQUIRED]
+        // @param signatureCounter   
+        //            represents the current value of the signature counter [REQUIRED]
+        // @param signatureValue   
+        //            represents the signature value [OPTIONAL]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorStartTransactionFailed   
+        //            the execution of the Secure Element functionality to start a transaction failed
+        // @raises ErrorRetrieveLogMessageFailed   
+        //            the execution of the Secure Element functionality to retrieve log message parts has failed
+        // @raises ErrorStorageFailure   
+        //            storing of the log message failed
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+        // @raises ErrorTimeNotSet   
+        //            the managed data/time in the Secure Element has not been updated after the initialization of the SE API
+        //            or a period of absence of current for the Secure Element 
+        // @raises ErrorCertificateExpired   
+        //            the certificate with the public key for the verification of the appropriate type of log messages is expired. 
+        //            Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. 
+        //            In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled	  	  
+	 
+        short startTransaction(in string clientId, 
+                               in octet  processData [], 
+                               in string <100> processType,
+                               in octet additionalData[],
+                               out unsigned long transactionNumber,
+                               out DateTime logTime,
+                               out octet serialNumber[],
+                               out unsigned long signatureCounter,
+                               out octet signatureValue[])
+                               raises(ErrorStartTransactionFailed,
+                                      ErrorRetrieveLogMessageFailed,
+                                      ErrorStorageFailure,
+                                      ErrorSeApiNotInitialized,
+                                      ErrorTimeNotSet,
+                                      ErrorCertificateExpired,
+                                      ErrorSecureElementDisabled);	   
+		
+													    
+        // Updates an open transaction
+        // @param clientId   
+        //            represents the ID of the application that has invoked the function [REQUIRED]
+        // @param transactionNumber   
+        //            parameter is used to unambiguously identify the current transaction [REQUIRED]
+        // @param processData   
+        //            represents all the new information regarding the state of the process since the start of the corresponding transaction 
+        //            or its last update [REQUIRED]
+        // @param processType   
+        //            identifies the type of the transaction as defined by the application [OPTIONAL]
+        // @param logTime    
+        //            represents the point in time of the Secure Element when the log message was created [CONDITIONAL]
+        // @param signatureValue   
+        //            represents the signature value [CONDITIONAL]
+        // @param signatureCounter  
+        //            represents the current value of the signature counter [CONDITIONAL]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorUpdateTransactionFailed   
+        //            the execution of the Secure Element functionality to update a transaction failed
+        // @raises ErrorRetrieveLogMessageFailed   
+        //            the execution of the Secure Element functionality to retrieve log message parts has failed
+        // @raises ErrorStorageFailure   
+        //            storing of the log message failed
+        // @raises ErrorNoTransaction   
+        //            no transaction is known to be open under the provided transaction number 
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+        // @raises ErrorTimeNotSet   
+        //            the managed data/time in the Secure Element has not been updated after the initialization of the SE API
+        //            or a period of absence of current for the Secure Element  
+        // @raises ErrorCertificateExpired   
+        //            the certificate with the public key for the verification of the appropriate type of log messages is expired. 
+        //            Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. 
+        //            In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled
+	
+        short updateTransaction(in string clientId,
+                                in unsigned long transactionNumber, 
+                                in octet processData[],
+                                in  string <100> processType,
+                                out DateTime logTime,
+                                out octet signatureValue[],
+                                out unsigned long signatureCounter)
+                                raises(ErrorUpdateTransactionFailed,
+                                       ErrorRetrieveLogMessageFailed,
+                                       ErrorStorageFailure,
+                                       ErrorNoTransaction,
+                                       ErrorSeApiNotInitialized,
+                                       ErrorTimeNotSet,
+                                       ErrorCertificateExpired,
+                                       ErrorSecureElementDisabled);
+	    		
+	    		
+        // Finishes an open transaction
+        // @param clientId   
+        //            represents the ID of the application that has invoked the function [REQUIRED]
+        // @param transactionNumber   
+        //            parameter is used to unambiguously identify the current transaction [REQUIRED]
+        // @param processData   
+        //            represents all the information regarding the final state of the process [REQUIRED]
+        // @param processType    
+        //            identifies the type of the transaction as defined by the application [OPTIONAL]
+        // @param additionalData   
+        //            reserved for future use [OPTIONAL]
+        // @param logTime   
+        //            represents the point in time of the Secure Element when the log message was created [REQUIRED]
+        // @param signatureValue   
+        //            represents the signature value [OPTIONAL] 
+        // @param signatureCounter  
+        //            represents the current value of the signature counter [REQUIRED] 
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorFinishTransactionFailed   
+        //            the execution of the Secure Element functionality to finish a transaction failed   
+        // @raises ErrorRetrieveLogMessageFailed   
+        //            the execution of the Secure Element functionality to retrieve log message parts has failed    
+        // @raises ErrorStorageFailure   
+        //            storing of the log message failed 
+        // @raises ErrorNoTransaction   
+        //            no transaction is known to be open under the provided transaction number 
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+        // @raises ErrorTimeNotSet   
+        //            the managed data/time in the Secure Element has not been updated after the initialization of the SE API
+        //            or a period of absence of current for the Secure Element 
+        // @raises ErrorCertificateExpired   
+        //            the certificate with the public key for the verification of the appropriate type of log messages is expired. 
+        //            Even if a certificate expired, the log message parts are created by the Secure Element and stored by the SE API. 
+        //            In this case, the exception ErrorCertificateExpired is raised only after the data of the log message has been stored.
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled
+	      		  		  		   
+        short finishTransaction(in string clientId,
+                                in unsigned long transactionNumber, 
+                                in octet processData[], 	
+                                in string <100> processType,	
+                                in octet  additionalData [],					
+                                out DateTime logTime,
+                                out octet signatureValue[],
+                                out unsigned long signatureCounter)
+                                raises(ErrorFinishTransactionFailed,
+                                       ErrorRetrieveLogMessageFailed,
+                                       ErrorStorageFailure,
+                                       ErrorNoTransaction,
+                                       ErrorSeApiNotInitialized,
+                                       ErrorTimeNotSet,
+                                       ErrorCertificateExpired,
+                                       ErrorSecureElementDisabled); 
+		
+		
+        // Exports the transaction log messages, containing the process and protocol data, that correspond to a certain transaction 
+        // and clientId. Additionally, the function SHALL export all system log messages and audit log messages whose signature
+        // counters are contained in the following interval:
+        //     Signature counter of the transaction log message for the start of the transaction and the signature
+        //     counter of the transaction log message for the end of the transaction (inclusive)
+        // Furthermore, additional files that are needed to verify the signatures included in the log messages are exported.
+        // @param transactionNumber   
+        //            indicates the transaction whose corresponding log messages are relevant for the export [REQUIRED]
+        // @param clientId   
+        //            ID of a client application that has used the API to log transactions.
+        //            Only transaction log messages that correspond to the clientId are relevant for the export. [REQUIRED]
+        // @param exportedData   
+        //            selected log messages and additional files needed to verify the signatures included in the log messages [REQUIRED] 
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorTransactionNumberNotFound   
+        //            no data has been found for the provided transactionNumber
+        // @raises ErrorIdNotFound   
+        //            no data has been found for the provided clientId
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+		    				  		  		  		   
+        short exportData(in unsigned long transactionNumber,
+                         in string clientId,
+                         out octet exportedData [])
+                         raises(ErrorTransactionNumberNotFound,
+                                ErrorIdNotFound,
+                                ErrorSeApiNotInitialized);
+	
+	
+        // Exports the transaction log messages, containing the process and protocol data, that correspond to a certain transaction. 
+        // Additionally, the function SHALL export all system log messages and audit log messages whose signature
+        // counters are contained in the following interval:
+        //     Signature counter of the transaction log message for the start of the transaction and the signature
+        //     counter of the transaction log message for the end of the transaction (inclusive)
+        // Furthermore, additional files that are needed to verify the signatures, included in the log messages, are exported.
+        // @param transactionNumber   
+        //            indicates the transaction whose corresponding log messages are relevant for the export [REQUIRED]
+        // @param exportedData   
+        //            selected log messages and additional files needed to verify the signatures included in the log messages [REQUIRED] 
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorTransactionNumberNotFound   
+        //            no data has been found for the provided transactionNumber
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+ 	   		  		  
+        short exportData(in unsigned long transactionNumber,
+                         out octet exportedData [])
+                         raises(ErrorTransactionNumberNotFound,
+                                ErrorSeApiNotInitialized);
+		
+		
+        // Exports the transaction log messages, containing the process and protocol data, that are relevant for a certain interval of transactions. 
+        // Additionally, the function SHALL export all system log messages and audit log messages whose signature counters 
+        // are contained in this interval.
+        // Furthermore, additional files that are needed to verify the signatures, included in the log messages, are exported.
+        // @param startTransactionNumber   
+        //            defines the transaction number (inclusive) regarding the start of the interval of relevant log messages [REQUIRED]
+        // @param endTransactionNumber   
+        //            defines the transaction number (inclusive) regarding the end of the interval of relevant log messages [REQUIRED]
+        // @param maximumNumberRecords   
+        //            if the value of this parameter is not 0, the function SHALL only return the log messages if the number 
+        //            of relevant records is less or equal to the number of maximum records. 
+        //            If the value of the parameter is 0, the function SHALL return all selected log messages [REQUIRED]
+        // @param exportedData   
+        //            selected log messages and additional files needed to verify the signatures included in the log messages [REQUIRED] 
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorParameterMismatch   
+        //            mismatch in parameters of the function    
+        // @raises ErrorTransactionNumberNotFound   
+        //            no data has been found for the provided transaction numbers
+        // @raises ErrorTooManyRecords   
+        //            the amount of requested records exceeds the parameter maximumNumberRecords
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+	   		  		  
+        short exportData(in unsigned long startTransactionNumber,
+                         in unsigned long endTransactionNumber,
+                         in long maximumNumberRecords,
+                         out octet exportedData [])
+                         raises(ErrorParameterMismatch,
+                                ErrorTransactionNumberNotFound,
+                                ErrorTooManyRecords,
+                                ErrorSeApiNotInitialized);
+			   		
+			   		  		  	  
+        // Exports the transaction log messages, containing the process and protocol data, that are relevant for a certain interval of transactions. 
+        // The transaction log messages in this interval SHALL correspond to the passed clientId. 
+        // Additionally, the function SHALL export all system log messages and audit log messages whose signature counters 
+        // are contained in the interval.
+        // Furthermore, additional files that are needed to verify the signatures, included in the log messages, are exported.
+        // @param startTransactionNumber   
+        //            defines the transaction number (inclusive) regarding the start of the interval of relevant log messages [REQUIRED]
+        // @param endTransactionNumber   
+        //            defines the transaction number (inclusive) regarding the end of the interval of relevant log messages [REQUIRED]
+        // @param clientId   
+        //            ID of a client application that has used the API to log transactions. 
+        //            Only transaction log messages that corresponds to the clientId are relevant for the export [REQUIRED]
+        // @param maximumNumberRecords   
+        //            if the value of this parameter is not 0, the function SHALL only return the log messages if the number 
+        //            of relevant records is less or equal to the number of maximum records. 
+        //            If the value of the parameter is 0, the function SHALL return all selected log messages [REQUIRED]
+        // @param exportedData   
+        //            selected log messages and additional files needed to verify the signatures included in the log messages [REQUIRED] 
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorParameterMismatch   
+        //            mismatch in parameters of the function    
+        // @raises ErrorTransactionNumberNotFound   
+        //            no data has been found for the provided transaction numbers
+        // @raises ErrorIdNotFound   
+        //            no data has been found for the provided clientId
+        // @raises ErrorTooManyRecords   
+        //            the amount of requested records exceeds the parameter maximumNumberRecords
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+	   		  		  
+        short exportData(in unsigned long startTransactionNumber,
+                         in unsigned long endTransactionNumber,
+                         in string clientId,
+                         in long maximumNumberRecords,
+                         out octet exportedData [])
+                         raises(ErrorParameterMismatch,
+                                ErrorTransactionNumberNotFound,
+                                ErrorIdNotFound,
+                                ErrorTooManyRecords,
+                                ErrorSeApiNotInitialized);
+			   	
+			   		  		  
+        // Exports the transaction log messages, system log messages and audit log messages
+        // that have been created in a certain period of time. 
+        // Furthermore, additional files that are needed to verify the signatures included in the log messages are exported.
+        // @param startDate   
+        //            defines the starting time (inclusive) for the period in that the relevant log messages have been created.
+        //            The value for the parameter SHALL be encoded in a format that conforms to BSI TR-03151. 
+        //            If a value for the input parameter endDate is passed, startDate SHALL be [OPTIONAL].
+        //            If no value for the input parameter endDate is passed, startDate SHALL be [REQUIRED].
+        // @param endDate     
+        //            defines the end time (inclusive) for the period in that relevant log messages have been created.
+        //            The value for the parameter SHALL be encoded in a format that conforms to BSI TR-03151. 
+        //            If a value for the input parameter startDate is passed, endDate SHALL be [OPTIONAL].
+        //            If no value for the input parameter startDate is passed, endDate SHALL be [REQUIRED].					
+        // @param maximumNumberRecords   
+        //            if the value of this parameter is not 0, the function SHALL only return the log messages if the number 
+        //            of relevant records is less or equal to the number of maximum records. 
+        //            If the value of the parameter is 0, the function SHALL return all selected log messages [REQUIRED]
+        // @param exportedData   
+        //            selected log messages and additional files needed to verify the signatures included in the log messages [REQUIRED] 
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorParameterMismatch   
+        //            mismatch in parameters of the function  
+        // @raises ErrorNoDataAvailable   
+        //            no data has been found for the provided selection
+        // @raises ErrorTooManyRecords    
+        //            the amount of requested records exceeds the parameter maximumNumberRecords	
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+	  		    		 		   		  		
+        short exportData(in DateTime startDate, 				
+                         in DateTime endDate,
+                         in long maximumNumberRecords,
+                         out octet exportedData [])
+                         raises(ErrorParameterMismatch,
+                                ErrorNoDataAvailable,
+                                ErrorTooManyRecords,
+                                ErrorSeApiNotInitialized);
+			  
+			   		  		  	  
+        // Exports the transaction log messages, system log messages and audit log messages that have been created in a certain period of time. 
+        // The transaction log messages in this period of time SHALL correspond to the passed clientId.
+        // Furthermore, additional files that are needed to verify the signatures included in the log messages are exported
+        // @param startDate   
+        //            defines the starting time (inclusive) for the period in that the relevant log messages have been created.
+        //            The value for the parameter SHALL be encoded in a format that conforms to BSI TR-03151.
+        //            If a value for the input paramter endDate is passed, startDate SHALL be [OPTIONAL].
+        //            If no value for the input paramter endDate is passed, startDate SHALL be [REQUIRED].
+        // @param endDate     
+        //            defines the end time (inclusive) for the period in that relevant log messages have been created.
+        //            The value for the parameter SHALL be encoded in a format that conforms to BSI TR-03151 [REQUIRED].
+        //            If a value for the input paramter startDate is passed, endDate SHALL be [OPTIONAL].
+        //            If no value for the input paramter startDate is passed, endDate SHALL be  [REQUIRED].	
+        // @param clientId   
+        //            ID of a client application that has used the API to log transactions.
+        //            Only transaction log messages that corresponds to the clientId are relevant for the export [REQUIRED]
+        // @param maximumNumberRecords   
+        //            if the value of this parameter is not 0, the function SHALL only return the log messages if the number 
+        //            of relevant records is less or equal to the number of maximum records. 
+        //            If the value of the parameter is 0, the function SHALL return all selected log messages [REQUIRED]
+        // @param exportedData   
+        //            selected log messages and additional files needed to verify the signatures included in the log messages [REQUIRED] 
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorParameterMismatch   
+        //            mismatch in parameters of the function  
+        // @raises ErrorNoDataAvailable   
+        //            no data has been found for the provided selection
+        // @raises ErrorIdNotFound   
+        //            no data has been found for the provided clientId
+        // @raises ErrorTooManyRecords    
+        //            the amount of requested records exceeds the parameter maximumNumberRecords	
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+	  		    		 		   		  		
+        short exportData(in DateTime startDate, 				
+                         in DateTime endDate,
+                         in string clientId,
+                         in long maximumNumberRecords,
+                         out octet exportedData [])
+                         raises(ErrorParameterMismatch,
+                                ErrorNoDataAvailable,
+                                ErrorIdNotFound, 
+                                ErrorTooManyRecords,
+                                ErrorSeApiNotInitialized);
+		
+		
+        // Exports all stored transaction log messages, system log message and audit log messages. 
+        // Furthermore, additional files that are needed to verify the signatures included in the log messages are exported.
+        // @param maximumNumberRecords   
+        //            if the value of this parameter is not 0, the function SHALL only return the log messages if the number 
+        //            of relevant records is less or equal to the number of maximum records. 
+        //            If the value of the parameter is 0, the function SHALL return all stored log messages [REQUIRED]
+        // @param exportedData   
+        //            all stored log messages and additional files needed to verify the signatures included in the log messages [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorTooManyRecords   
+        //            the amount of requested records exceeds the parameter maximumNumberRecords	
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized 		     		  		  
+		
+        short exportData(in long maximumNumberRecords, 
+                         out octet exportedData [])
+                         raises(ErrorTooManyRecords,
+                                ErrorSeApiNotInitialized);
+		
+		
+        // Exports the certificates of the certificate chains. These certificates belong to
+        // the public keys of the key pairs that are used for the creation of signature values in log messages
+        // @param certificates   
+        //            the TAR archive that contains all certificates that are necessary for the verification of log messages. 
+        //            The format of the TAR archive and the contained certificates SHALL conform to BSI TR-03151 [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorExportCertFailed   
+        //            the collection of the certificates for the export failed   
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+		
+        short exportCertificates(out octet certificates [])
+                                 raises(ErrorExportCertFailed,
+                                        ErrorSeApiNotInitialized);		  		  
+		
+		
+        // Restores a backup in the SE API and storage. The backup data includes log messages and certificates 
+        // that have been exported by using the exportData function.
+        // Log messages and certificates are passed in the TAR archive that has been returned during the export of the log messages and certificates.
+        // The function SHALL store the data of the passed log messages in the storage. If an imported log message
+        // has a file name that already exists in the storage, a counter SHALL be appended to the file name of the imported log message.
+        // The function SHALL store an imported certificate only if no certificate of the same name is managed by the SE API.
+        // @param restoreData   
+        //            represents the TAR archive that contains the log messages and certificates for the restore process [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorRestoreFailed   
+        //            the restore process has failed
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+        // @raises ErrorUserNotAuthorized   
+        //            the user who has invoked the function restoreFromBackup is not authorized to execute this function
+        // @raises ErrorUserNotAuthenticated   
+        //            the user who has invoked the function restoreFromBackup has not the status authenticated 
+	      		 
+        short restoreFromBackup(in octet restoreData [])
+                                raises(ErrorRestoreFailed,
+                                       ErrorSeApiNotInitialized,
+                                       ErrorUserNotAuthorized,
+                                       ErrorUserNotAuthenticated);
+		
+		
+        // Reads a log message that bases on the last log message parts that have been produced and processed by the Secure Element
+        // @param logMessage 
+        //            contains the last log message that the Secure Element has produced [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorNoLogMessage   
+        //            no log message parts are found
+        // @raises ErrorReadingLogMessage   
+        //            error while retrieving log message parts 	
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled					
+		
+        short readLogMessage(out octet logMessage [])
+                             raises(ErrorNoLogMessage,
+                                    ErrorReadingLogMessage,
+                                    ErrorSeApiNotInitialized,
+                                    ErrorSecureElementDisabled);
+		
+		
+        // Exports the serial number(s) of the SE API. A serial number is a hash value of a public key that belongs to a key pair 
+        // whose private key is used to create signature values of log messages.
+        // @param serialNumbers   
+        //            the serial number(s) of the SE API. The serial number(s) SHALL be encoded in the TLV structure defined in BSI TR-03151. [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorExportSerialNumbersFailed   
+        //             the collection of the serial number(s) failed
+        // @raises ErrorSeApiNotInitialized   
+        //             the SE API has not been initialized
+		
+        short exportSerialNumbers(out octet serialNumbers [])
+                                  raises(ErrorExportSerialNumbersFailed,
+                                         ErrorSeApiNotInitialized);
+			
+								   		  
+        // Supplies the maximal number of clients that can use the functionality to log transactions of the SE API simultaneously
+        // @param maxNumberClients    
+        //            maximum number of clients that can use the functionality to log transactions of the SE API simultaneously [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorGetCurrentNumberOfClientsFailed   
+        //             the determination of the maximum number of clients that could use the SE API simultaneously failed
+        // @raises ErrorSeApiNotInitialized   
+        //             the SE API has not been initialized
+        // @raises ErrorSecureElementDisabled   
+        //             the Secure Element has been disabled
+		
+        short getMaxNumberOfClients(out unsigned long maxNumberClients)
+                                    raises(ErrorGetMaxNumberOfClientsFailed,
+                                           ErrorSeApiNotInitialized,
+                                           ErrorSecureElementDisabled);
+				
+									 		 
+        // Supplies the number of clients that are currently using the functionality to log transactions of the SE API.
+        // @param currentNumberClients    
+        //            the number of clients that are currently using the functionality of the SE API [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorGetCurrentNumberOfClientsFailed   
+        //            the determination of the current number of clients using the SE API failed
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled
+		
+        short getCurrentNumberOfClients(out unsigned long currentNumberClients)
+                                        raises(ErrorGetCurrentNumberOfClientsFailed,
+                                               ErrorSeApiNotInitialized,
+                                               ErrorSecureElementDisabled);
+						
+										 		 
+        // Supplies the maximal number of simultaneously opened transactions that can be managed by the SE API
+        // @param maxNumberTransactions   
+        //            maximum number of simultaneously opened transactions that can be managed by the SE API [REQUIRED]   
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorGetMaxNumberTransactionsFailed   
+        //            the determination of the maximum number of transactions that can be managed simultaneously failed
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled
+										        	 
+        short getMaxNumberOfTransactions(out unsigned long maxNumberTransactions)
+                                         raises(ErrorGetMaxNumberTransactionsFailed,
+                                                ErrorSeApiNotInitialized,
+                                                ErrorSecureElementDisabled);
+										 		 
+										 		 
+        // Supplies the number of open transactions that are currently managed by the SE API
+        // @param currentNumberTransactions   
+        //            the number of open transactions that are currently managed by the SE API [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorGetCurrentNumberOfTransactionsFailed   
+        //            the determination of the number of open transactions that are currently managed by the SE API failed
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled
+		
+        short getCurrentNumberOfTransactions(out unsigned long currentNumberTransactions)	
+                                             raises(ErrorGetCurrentNumberOfTransactionsFailed,
+                                                    ErrorSeApiNotInitialized,
+                                                    ErrorSecureElementDisabled);	
+										 		 	  
+		
+        // Supplies the supported variants to update transactions
+        // @param supportedUpdateVariants   
+        //            the supported variant(s) to update a transaction [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorGetSupportedUpdateVariantsFailed   
+        //            the identification of the supported variant(s) to update transactions failed  
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized  
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled
+		
+        short getSupportedTransactionUpdateVariants(out UpdateVariants supportedUpdateVariants)
+                                                    raises(ErrorGetSupportedUpdateVariantsFailed,
+                                                           ErrorSeApiNotInitialized,
+                                                           ErrorSecureElementDisabled);
+													 
+													 		 
+        // Deletes all data that is stored in the storage. The function SHALL delete
+        // only data that has been exported.
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorDeleteStoredDataFailed   
+        //             the deletion of the data from the storage failed  
+        // @raises ErrorUnexportedStoredData   
+        //             the deletion of data from the storage failed because the storage contains data that has not been exported 
+        // @raises ErrorSeApiNotInitialized   
+        //             the SE API has not been initialized
+        // @raises ErrorUserNotAuthorized   
+        //             the user who has invoked the function deleteStoredData is not authorized to execute this function
+        // @raises ErrorUserNotAuthenticated   
+        //             the user who has invoked the function deleteStoredData has not the status authenticated
+		
+        short deleteStoredData() raises(ErrorDeleteStoredDataFailed,
+                                        ErrorUnexportedStoredData,
+                                        ErrorSeApiNotInitialized,
+                                        ErrorUserNotAuthorized,
+                                        ErrorUserNotAuthenticated);
+										 		 	  
+		
+        // Supplies the supported variants to update the current date/time
+        // @param supportedSyncVariant   
+        //            the supported variant to update  the current date/time [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorGetTimeSyncVariantFailed   
+        //            the identification of the supported variant to update the current date/time failed  
+        // @raises ErrorSeApiNotInitialized   
+        //            the SE API has not been initialized  
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled
+		
+        short GetTimeSyncVariant(out SyncVariants supportedSyncVariant)
+                                                    raises(ErrorGetTimeSyncVariantFailed,
+                                                           ErrorSeApiNotInitialized,
+                                                           ErrorSecureElementDisabled);
+		
+		
+        // Enables an authorized user or application to authenticate to the SE API for the usage of restricted SE API functions	
+        // @param userId   
+        //            the ID of the user who or application that wants to be authenticated [REQUIRED]      
+        // @param pin   
+        //            the PIN for the authentication [REQUIRED]
+        // @param authenticationResult   
+        //            the result of the authentication [REQUIRED] 
+        // @param remainingRetries   
+        //            the number of remaining retries to enter a PIN [REQUIRED]
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned.
+        //         If the authentication attempt has failed, the return value AUTHENTICATION_FAILED SHALL be returned. 
+        // @raises ErrorSigningSystemOperationDataFailed   
+        //            the determination of the log message parts for the system operation data by the Secure Element failed
+        // @raises ErrorRetrieveLogMessageFailed   
+        //            the execution of the Secure Element functionality to retrieve log message parts has failed
+        // @raises ErrorStorageFailure   
+        //            storing of the data of the log message failed
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled    
+									 
+        short authenticateUser(in string userId, 
+                               in octet pin [], 
+                               out AuthenticationResult authenticationResult, 
+                               out short remainingRetries)
+                               raises(ErrorSigningSystemOperationDataFailed,
+                                      ErrorRetrieveLogMessageFailed,
+                                      ErrorStorageFailure,
+                                      ErrorSecureElementDisabled);		
+				
+										 
+        // Enables the log out of an authenticated user or application from the SE API
+        // @param userId    
+        //            the ID of the user who or application that wants to log out from the SE API [REQUIRED] 
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned
+        // @raises ErrorUserIdNotManaged   
+        //            the passed userId is not managed by the SE API 
+        // @raises ErrorSigningSystemOperationDataFailed   
+        //            the determination of the log message parts for the system operation data by the Secure Element failed
+        // @raises ErrorUserIdNotAuthenticated   
+        //            the passed userId has not the status authenticated
+        // @raises ErrorRetrieveLogMessageFailed   
+        //            the execution of the Secure Element functionality to retrieve log message parts has failed
+        // @raises ErrorStorageFailure   
+        //            storing of the data of the log message failed
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has been disabled
+		 
+        short logOut(in string userId)
+                     raises(ErrorUserIdNotManaged,
+                            ErrorSigningSystemOperationDataFailed,
+                            ErrorUserIdNotAuthenticated,
+                            ErrorRetrieveLogMessageFailed,
+                            ErrorStorageFailure,
+                            ErrorSecureElementDisabled);	
+		
+		
+        // Enables the unblocking for the entry of a PIN and the definition of a new PIN for the authentication of authorized users or application 		
+        // @param userId   
+        //            the ID of the user who or application that wants to unblock the corresponding PIN [REQUIRED] 
+        // @param puk   
+        //            the PUK of the user/application [REQUIRED] 
+        // @param newPin   
+        //            the new PIN for the user/application [REQUIRED] 
+        // @param unblockResult   
+        //            the result of the unblock procedure [REQUIRED] 
+        // @return if the execution of the function has been successful, the return value EXECUTION_OK SHALL be returned.
+        //         If the execution of attempt to unblock a PIN entry has failed, the return value UNBLOCK_FAILED SHALL be returned. 
+        // @raises ErrorSigningSystemOperationDataFailed   
+        //            the determination of the log message parts for the system operation data by the Secure Element failed
+        // @raises ErrorRetrieveLogMessageFailed   
+        //            the execution of the Secure Element functionality to retrieve log message parts has failed
+        // @raises ErrorStorageFailure   
+        //            storing of the data of the log message failed
+        // @raises ErrorSecureElementDisabled   
+        //            the Secure Element has already been disabled
+			  		  
+        short unblockUser(in string userId, 
+                          in octet puk [], 
+                          in octet newPin [], 
+                          out UnblockResult unblockResult)						 		 					 		 
+                          raises (ErrorSigningSystemOperationDataFailed,
+                                  ErrorRetrieveLogMessageFailed,
+                                  ErrorStorageFailure,
+                                  ErrorSecureElementDisabled);			 		 
+	};
+};
+
