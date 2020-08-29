@@ -5,7 +5,8 @@
 ### Technische Sicherheitseinrichtung für elektronische Aufzeichnungssysteme
 
 Quelle: [TR-03153.pdf](TR-03153.pdf)
-[www.tuvit.de/de/tuevit/elektronische-kassensysteme](https://www.tuvit.de/de/tuevit/elektronische-kassensysteme/)
+
+Website: [www.tuvit.de/de/tuevit/elektronische-kassensysteme](https://www.tuvit.de/de/tuevit/elektronische-kassensysteme/)
 
 #### Aufzeichnungspflicht
 § 146a (1) Satz 1: „Wer aufzeichnungspflichtige Geschäftsvorfälle oder andere Vorgänge mit Hilfe eines elektronischen Aufzeichnungssystems erfasst, hat ein elektronisches Aufzeichnungssystem zu verwenden, das jeden aufzeichnungspflichtigen Geschäftsvorfall und anderen Vorgang einzeln, vollständig, richtig, zeitgerecht und geordnet aufzeichnet.“
