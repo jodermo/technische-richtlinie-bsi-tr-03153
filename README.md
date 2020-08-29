@@ -1,5 +1,5 @@
 # POS-System
-## Voraussetzungen für Kassensysteme in deutschland
+## Voraussetzungen für Kassensysteme in Deutschland (2020)
 Author: Moritz Petzka, [petzka.com](https://petzka.com)
 
 ## TÜV: Technische Richtlinie [BSI TR-03153](TR-03153.pdf)
