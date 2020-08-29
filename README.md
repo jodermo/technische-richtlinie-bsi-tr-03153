@@ -32,4 +32,4 @@ Die Mitteilung nach Satz 1 ist innerhalb eines Monats nach Anschaffung oder Auß
 ### Aufgaben des BSI
 § 146a (3) Sätze 2-3: „Die Erfüllung der Anforderungen nach Satz 1 Nummer 2 Buchstabe a bis c ist durch eine Zertifizierung des Bundesamts für Sicherheit in der Informationstechnik nachzuweisen, die fortlaufend aufrechtzuerhalten ist. Das Bundesamt für Sicherheit in der Informationstechnik kann mit der Festlegung von Anforderungen an die technische Sicherheitseinrichtung im Sinne des Satzes 1 Nummer 2 Buchstabe a bis c beauftragt werden. [...]“
 
-[TR-03153.pdf](TR-03153.pdf)
+Quelle: [TR-03153.pdf](TR-03153.pdf)
